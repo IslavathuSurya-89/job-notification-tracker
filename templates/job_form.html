@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit notification' if job else 'Add notification' }}{% endblock %}
+{% block content %}
+<section class="form-intro"><a class="back-link" href="{{ url_for('index') }}">← Back to dashboard</a><p class="eyebrow">OPPORTUNITY DETAILS</p><h1>{{ 'Edit job notification' if job else 'Add a job notification' }}</h1><p>Save the details from the official recruitment notice.</p></section>
+<form class="panel job-form" method="post">
+  <div class="form-grid">
+    <label>Job title *<input name="title" required maxlength="160" value="{{ job.title if job else '' }}" placeholder="e.g. Junior Assistant"></label>
+    <label>Organization *<input name="organization" required maxlength="160" value="{{ job.organization if job else '' }}" placeholder="e.g. Recruitment department"></label>
+    <label>Department<input name="department" value="{{ job.department if job else '' }}" placeholder="e.g. Administration"></label>
+    <label>Qualification<input name="qualification" value="{{ job.qualification if job else '' }}" placeholder="e.g. 10th pass, 12th pass, degree"></label>
+    <label>Age limit<input name="age_limit" value="{{ job.age_limit if job else '' }}" placeholder="Check official notice"></label>
+    <label>Vacancies<input type="number" min="0" name="vacancies" value="{{ job.vacancies if job and job.vacancies is not none else '' }}" placeholder="Number of posts"></label>
+    <label>Salary / stipend<input name="salary" value="{{ job.salary if job else '' }}" placeholder="As per notification"></label>
+    <label>Category<select name="category"><option value="Government" {% if not job or job.category == 'Government' %}selected{% endif %}>Government</option><option value="Private" {% if job and job.category == 'Private' %}selected{% endif %}>Private</option></select></label>
+    <label>Location<input name="location" value="{{ job.location if job else '' }}" placeholder="e.g. Andhra Pradesh / Remote"></label>
+    <label>Notification date<input type="date" name="notification_date" value="{{ job.notification_date.isoformat() if job and job.notification_date else '' }}"></label>
+    <label>Last date to apply<input type="date" name="last_date" value="{{ job.last_date.isoformat() if job and job.last_date else '' }}"></label>
+    <label>Status<select name="status">{% for value in ['Open', 'Closed', 'Applied'] %}<option value="{{ value }}" {% if job and job.status == value %}selected{% elif not job and value == 'Open' %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></label>
+    <label class="full">Official application URL<input type="url" name="apply_url" value="{{ job.apply_url if job else '' }}" placeholder="https://official-website.gov.in/"></label>
+    <label class="full">Notes<textarea name="notes" rows="4" placeholder="Eligibility notes, documents, exam details…">{{ job.notes if job else '' }}</textarea></label>
+  </div>
+  <p class="required-note">* Required fields. Confirm all details against the official notification before applying.</p>
+  <div class="form-actions"><a class="button outline" href="{{ url_for('index') }}">Cancel</a><button class="button primary" type="submit">{{ 'Save changes' if job else 'Save notification' }}</button></div>
+</form>
+{% endblock %}
